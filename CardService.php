@@ -19,19 +19,22 @@ class CardService
             throw new RuntimeException('GD Library not loaded');
         }
 
-        if (!$this->url_exists($cardAsset->getUrl())) {
+        if (file_exists($cardAsset->getAltUrl())) {
             if ((string)$cardAsset->getExtension() === "png") {
-
                 $im = imagecreatefrompng($cardAsset->getAltUrl());
             } else {
                 $im = imagecreatefromjpeg($cardAsset->getAltUrl());
             }
-        } else {
+        } elseif ($this->urlExists($cardAsset->getAltUrl())) {
             if ((string)$cardAsset->getExtension() === "png") {
                 $im = imagecreatefrompng($cardAsset->getUrl());
+                imagepng(imagecreatefromstring(file_get_contents($cardAsset->getUrl())), $cardAsset->getAltUrl());
             } else {
                 $im = imagecreatefromjpeg($cardAsset->getUrl());
+                imagejpeg(imagecreatefromstring(file_get_contents($cardAsset->getUrl())), $cardAsset->getAltUrl());
             }
+        }else{
+            throw new RuntimeException('Source not found');
         }
 
         $result = imagecrop($im, [
@@ -44,7 +47,7 @@ class CardService
         return $result;
     }
 
-    public function url_exists($url): bool {
+    public function urlExists($url): bool {
         $file_headers = @get_headers($url);
         if (!$file_headers || (string)$file_headers[0] === 'HTTP/1.1 404 Not Found') {
             $exists = false;
