@@ -3,7 +3,7 @@
 
 namespace FalloutGrabber;
 
-use RuntimeException;
+use Imagick;
 
 class Controller
 {
@@ -91,7 +91,6 @@ class Controller
 
             if ($cardAsset->getExtension() === "png") {
                 file_put_contents("storage/tmp.png", file_get_contents($cardAsset->getUrl()));
-                ini_set("memory_limit","140M");
 
                 $imagick = new Imagick();
                 $imagick->readImage('storage/tmp.png');
