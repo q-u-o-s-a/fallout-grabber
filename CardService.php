@@ -15,30 +15,19 @@ class CardService
 
     public function getImage($startXPosition, $startYPosition, CardAsset $cardAsset) {
 
-        if(!extension_loaded('gd')){
+        if (!extension_loaded('gd')) {
             throw new RuntimeException('GD Library not loaded');
         }
 
-        if (file_exists($cardAsset->getAltUrl())) {
-            if ((string)$cardAsset->getExtension() === "png") {
-                $im = imagecreatefrompng($cardAsset->getAltUrl());
-            } else {
-                $im = imagecreatefromjpeg($cardAsset->getAltUrl());
+        if (!file_exists($cardAsset->getAltUrl())) {
+            if (!imagejpeg(imagecreatefromstring(file_get_contents($cardAsset->getUrl())), $cardAsset->getAltUrl())) {
+                throw new RuntimeException('Source not found, local source:'
+                    . $cardAsset->getAltUrl() . ', check if exists:' . file_exists($cardAsset->getAltUrl()
+                        . "; remote source:" . $cardAsset->getUrl() . ", check if exists:"
+                        . $this->urlExists($cardAsset->getUrl()) . ";"));
             }
-        } elseif ($this->urlExists($cardAsset->getUrl())) {
-            if ((string)$cardAsset->getExtension() === "png") {
-                $im = imagecreatefrompng($cardAsset->getUrl());
-                imagepng(imagecreatefromstring(file_get_contents($cardAsset->getUrl())), $cardAsset->getAltUrl());
-            } else {
-                $im = imagecreatefromjpeg($cardAsset->getUrl());
-                imagejpeg(imagecreatefromstring(file_get_contents($cardAsset->getUrl())), $cardAsset->getAltUrl());
-            }
-        }else{
-            throw new RuntimeException('Source not found, local source:'
-                .$cardAsset->getAltUrl().', check if exists:'.file_exists($cardAsset->getAltUrl()
-                    ."; remote source:".$cardAsset->getUrl().", check if exists:"
-                    .$this->urlExists($cardAsset->getUrl()).";"));
         }
+        $im = imagecreatefromjpeg($cardAsset->getAltUrl());
 
         $result = imagecrop($im, [
             'x' => $startXPosition,
@@ -70,7 +59,7 @@ class CardService
         $startYPosition = ($cardRow * $cardAsset->getCardHeight());
 
         $path = self::path . $cardAsset->getCardType();
-        if (!is_dir($path)){
+        if (!is_dir($path)) {
             if (!mkdir($path, 0777, true) && !is_dir($path)) {
                 throw new RuntimeException(sprintf('Directory "%s" was not created', $path));
             }
