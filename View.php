@@ -115,7 +115,7 @@ class View
                                     <img src="/storage/imageCache/'.$set.'/'.$cardRow.'-'.$cardColumn.'.png" class="card-img-top" alt="...">
                                     <p class="card-text">'.print_r($cards['Names'][$i], true).'</p>
                                     <button type="button" class="bi-plus-square-dotted btn btn-primary"> Add Card</button>
-                                    <button type="button" hx-get="/?action=loadCard&set='.$set.'&cardNr='.$i.'" class="bi-disc btn btn-primary"> </button>
+                                    <button type="button" hx-get="/?action=loadCard&set='.$set.'&cardNr='.$i.'" class="bi-cloud-download btn btn-primary"> </button>
                                     </div>
                                 </div>
                             </div>');

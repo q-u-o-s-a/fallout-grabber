@@ -2,6 +2,8 @@
 
 namespace FalloutGrabber;
 
+use RuntimeException;
+
 class CardService
 {
     const path = "storage/imageCache/";
@@ -11,29 +13,33 @@ class CardService
     function getImage($startXPosition, $startYPosition, CardAsset $cardAsset) {
 
         if (!$this->url_exists($cardAsset->getUrl())) {
-            if ($cardAsset->getExtension() == "png") {
+            if ((string)$cardAsset->getExtension() === "png") {
 
                 $im = imagecreatefrompng($cardAsset->getAltUrl());
             } else {
                 $im = imagecreatefromjpeg($cardAsset->getAltUrl());
             }
         } else {
-            if ($cardAsset->getExtension() == "png") {
+            if ((string)$cardAsset->getExtension() === "png") {
                 $im = imagecreatefrompng($cardAsset->getUrl());
             } else {
                 $im = imagecreatefromjpeg($cardAsset->getUrl());
             }
         }
 
-        $result = imagecrop($im, ['x' => $startXPosition, 'y' => $startYPosition,
-            'width' => $cardAsset->getCardWidth(), 'height' => $cardAsset->getCardHeight()]);
+        $result = imagecrop($im, [
+            'x' => $startXPosition,
+            'y' => $startYPosition,
+            'width' => $cardAsset->getCardWidth(),
+            'height' => $cardAsset->getCardHeight()
+        ]);
         imagedestroy($im);
         return $result;
     }
 
     function url_exists($url): bool {
         $file_headers = @get_headers($url);
-        if (!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
+        if (!$file_headers || (string)$file_headers[0] === 'HTTP/1.1 404 Not Found') {
             $exists = false;
         } else {
             $exists = true;
@@ -50,8 +56,11 @@ class CardService
         $startXPosition = (($cardColumn) * $cardAsset->getCardWidth());
         $startYPosition = ($cardRow * $cardAsset->getCardHeight());
 
-        if (!is_dir(self::path . $cardAsset->getCardType())) {
-            mkdir(self::path . $cardAsset->getCardType());
+        $path = self::path . $cardAsset->getCardType();
+        if (!is_dir($path)){
+            if (!mkdir($path, 0777, true) && !is_dir($path)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $path));
+            }
         }
 
         $image = $this->getImage($startXPosition, $startYPosition, $cardAsset);
@@ -71,13 +80,5 @@ class CardService
         if (!file_exists($this->fullCardPath)) {
             $this->getCrop($cardColumn, $cardRow, $cardAsset);
         }
-
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFullCardPath() {
-        return $this->fullCardPath;
     }
 }
