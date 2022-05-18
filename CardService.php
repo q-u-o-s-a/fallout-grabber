@@ -25,7 +25,7 @@ class CardService
             } else {
                 $im = imagecreatefromjpeg($cardAsset->getAltUrl());
             }
-        } elseif ($this->urlExists($cardAsset->getAltUrl())) {
+        } elseif ($this->urlExists($cardAsset->getUrl())) {
             if ((string)$cardAsset->getExtension() === "png") {
                 $im = imagecreatefrompng($cardAsset->getUrl());
                 imagepng(imagecreatefromstring(file_get_contents($cardAsset->getUrl())), $cardAsset->getAltUrl());
@@ -34,7 +34,10 @@ class CardService
                 imagejpeg(imagecreatefromstring(file_get_contents($cardAsset->getUrl())), $cardAsset->getAltUrl());
             }
         }else{
-            throw new RuntimeException('Source not found');
+            throw new RuntimeException('Source not found, local source:'
+                .$cardAsset->getAltUrl().', check if exists:'.file_exists($cardAsset->getAltUrl()
+                    ."; remote source:".$cardAsset->getUrl().", check if exists:"
+                    .$this->urlExists($cardAsset->getUrl()).";"));
         }
 
         $result = imagecrop($im, [
