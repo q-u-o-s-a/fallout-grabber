@@ -8,7 +8,7 @@ class View
         echo '<!DOCTYPE html>
             <html lang="en">
             <head>
-                <title>Bootstrap Example</title>
+                <title>Fallout Grabber</title>
                 <meta charset="utf-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
                 <link href="/css/bootstrap-icons-1.8.1/bootstrap-icons.css" rel="stylesheet">
