@@ -4,6 +4,8 @@
 namespace FalloutGrabber;
 
 use Imagick;
+use ImagickException;
+use RuntimeException;
 
 class Controller
 {
@@ -83,34 +85,42 @@ class Controller
             $cardAsset = new CardAsset($cardRepository->getAsset($this->attributes->set));
 
             if (is_file($cardAsset->getAltUrl())) {
-                echo "Set already downloaded";
+                echo "&nbsp;Set already downloaded";
                 die();
             }
 
-            echo "try to download set from:" . $cardAsset->getUrl();
+            echo "&nbsp;Try to download set from:" . $cardAsset->getUrl();
 
             if ($cardAsset->getExtension() === "png") {
                 file_put_contents("storage/tmp.png", file_get_contents($cardAsset->getUrl()));
 
-                $imagick = new Imagick();
-                $imagick->readImage('storage/tmp.png');
-                $imagick->writeImages($cardAsset->getAltUrl(), false);
+                if (extension_loaded('imagick')) {
+                    $imagick = new Imagick();
+                    try {
+                        $imagick->readImage('storage/tmp.png');
+                        $imagick->writeImages($cardAsset->getAltUrl(), false);
+                    } catch (ImagickException $e) {
+                        throw new RuntimeException('Error while Imagick-Conversion:'
+                            . $cardAsset->getAltUrl() . ', check if exists:' . file_exists($cardAsset->getAltUrl()
+                                . "; remote source:" . $cardAsset->getUrl() . ";"));
+                    }
+                    $result = 1;
+                } else {
+                    $img = imagecreatefrompng("storage/tmp.png");
+                    $result = imagejpeg($img, $cardAsset->getAltUrl());
 
-                //$img = imagecreatefrompng("storage/tmp.png");
-                //$result = imagejpeg($img, $cardAsset->getAltUrl());
-                /*
-                if (!$result) {
-                    throw new RuntimeException('Source not found, local source:'
-                        . $cardAsset->getAltUrl() . ', check if exists:' . file_exists($cardAsset->getAltUrl()
-                            . "; remote source:" . $cardAsset->getUrl() . ";"));
-                }*/
-                $result = 1;
+                    if (!$result) {
+                        throw new RuntimeException('Source not found, local source:'
+                            . $cardAsset->getAltUrl() . ', check if exists:' . file_exists($cardAsset->getAltUrl()
+                                . "; remote source:" . $cardAsset->getUrl() . ";"));
+                    }
+                }
             } else {
                 file_put_contents($cardAsset->getAltUrl(), file_get_contents($cardAsset->getUrl()));
                 $result = 1;
             }
 
-            echo "Result:" . $result;
+            echo ($result?"...download successful":"...download failed");
             die();
         }
     }
