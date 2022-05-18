@@ -1,0 +1,15 @@
+{
+  "name": "vendor_name/html",
+  "description": "Fallout Grabber",
+  "minimum-stability": "beta",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "j.walczak",
+      "email": "j.walczak@getit-berlin.de"
+    }
+  ],
+  "require": {
+    "php": "^7.4.0"
+  }
+}
