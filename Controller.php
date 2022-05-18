@@ -88,16 +88,24 @@ class Controller
             }
 
             echo "try to download set from:" . $cardAsset->getUrl();
+
             if ($cardAsset->getExtension() === "png") {
                 file_put_contents("storage/tmp.png", file_get_contents($cardAsset->getUrl()));
                 ini_set("memory_limit","140M");
-                $img = imagecreatefrompng("storage/tmp.png");
-                $result = imagejpeg($img, $cardAsset->getAltUrl());
+
+                $imagick = new Imagick();
+                $imagick->readImage('storage/tmp.png');
+                $imagick->writeImages($cardAsset->getAltUrl(), false);
+
+                //$img = imagecreatefrompng("storage/tmp.png");
+                //$result = imagejpeg($img, $cardAsset->getAltUrl());
+                /*
                 if (!$result) {
                     throw new RuntimeException('Source not found, local source:'
                         . $cardAsset->getAltUrl() . ', check if exists:' . file_exists($cardAsset->getAltUrl()
                             . "; remote source:" . $cardAsset->getUrl() . ";"));
-                }
+                }*/
+                $result = 1;
             } else {
                 file_put_contents($cardAsset->getAltUrl(), file_get_contents($cardAsset->getUrl()));
                 $result = 1;
