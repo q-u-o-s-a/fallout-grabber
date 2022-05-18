@@ -3,6 +3,7 @@
 
 namespace FalloutGrabber;
 
+use RuntimeException;
 
 class Controller
 {
@@ -38,7 +39,7 @@ class Controller
     }
 
     public function loadCardAction(): void {
-        if (isset($this->attributes->set)){
+        if (isset($this->attributes->set)) {
             $cardRepository = new CardRepository();
             $assets = $cardRepository->getAssets();
 
@@ -67,12 +68,42 @@ class Controller
     }
 
     public function showCardSetAction(): void {
-        if (isset($this->attributes->set)){
+        if (isset($this->attributes->set)) {
             $cardRepository = new CardRepository();
             $this->view->content($this->view->overviewLeftNavigation(
                 $cardRepository->getCardTypes(),
                 $this->attributes->set,
                 $this->view->showCardSet($this->attributes->set, $cardRepository->getAsset($this->attributes->set))));
+        }
+    }
+
+    public function downloadSetAction(): void {
+        if (isset($this->attributes->set)) {
+            $cardRepository = new CardRepository();
+            $cardAsset = new CardAsset($cardRepository->getAsset($this->attributes->set));
+
+            if (is_file($cardAsset->getAltUrl())) {
+                echo "Set already downloaded";
+                die();
+            }
+
+            echo "try to download set from:" . $cardAsset->getUrl();
+            if ($cardAsset->getExtension() === "png") {
+                file_put_contents("storage/tmp.png", file_get_contents($cardAsset->getUrl()));
+                $img = imagecreatefrompng("storage/tmp.png");
+                $result = imagejpeg($img, $cardAsset->getAltUrl());
+                if (!$result) {
+                    throw new RuntimeException('Source not found, local source:'
+                        . $cardAsset->getAltUrl() . ', check if exists:' . file_exists($cardAsset->getAltUrl()
+                            . "; remote source:" . $cardAsset->getUrl() . ";"));
+                }
+            } else {
+                file_put_contents($cardAsset->getAltUrl(), file_get_contents($cardAsset->getUrl()));
+                $result = 1;
+            }
+
+            echo "Result:" . $result;
+            die();
         }
     }
 
