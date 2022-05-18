@@ -4,3 +4,4 @@ storage
 *.png
 *.jpg
 *.jpeg
+/composer.phar
