@@ -98,7 +98,8 @@ class View
     public function showCardSet($set, $cards): string {
         $content = '<div class="col-sm-10">
                         <h2 class="mt-5">Cardset</h2>
-                        <h5>' . $set . '</h5>
+                        <h5>' . $set . '
+                        <button type="button" hx-get="/?action=downloadSet&set='.$set.'" class="bi-cloud-download btn btn-primary"> </button></h5>
                         <p>Overview over set</p>';
 
         $content .= '    <div class="row">';

@@ -3,11 +3,14 @@
 
 namespace FalloutGrabber;
 
+use Imagick;
+use ImagickException;
+use RuntimeException;
 
 class Controller
 {
-    private $view;
-    private $attributes;
+    private View $view;
+    private object $attributes;
 
     /**
      * Controller constructor.
@@ -17,46 +20,48 @@ class Controller
         $this->view = $view;
         $this->attributes = $this->getAttributes();
         $action = $this->attributes->action . "Action";
-        if ($action == 'Action') {
+        if ($action === 'Action') {
             $action = 'initAction';
         }
         $this->$action();
     }
 
-    public function getAttributes() {
+    public function getAttributes(): object {
         $request = $_GET;
         if (isset($_POST['set'])) {
-            $cardNr = (int)$_POST['cardNr'];
-            $action = (string)$_POST['action'];
-            $set = (string)$_POST['set'];
+            $cardNr = (int)($_POST['cardNr'] ?? null);
+            $action = (string)($POST['action'] ?? "");
+            $set = (string)($POST['set'] ?? "");
         } else {
-            $cardNr = (int)$request['cardNr'];
-            $action = (string)$request['action'];
-            $set = (string)$request['set'];
+            $cardNr = (int)($request['cardNr'] ?? null);
+            $action = (string)($request['action'] ?? "");
+            $set = (string)($request['set'] ?? "");
         }
         return (object)['cardNr' => $cardNr, 'action' => $action, 'set' => $set];
     }
 
-    public function loadCardAction() {
-        $cardRepository = new CardRepository();
-        $assets = $cardRepository->getAssets();
+    public function loadCardAction(): void {
+        if (isset($this->attributes->set)) {
+            $cardRepository = new CardRepository();
+            $assets = $cardRepository->getAssets();
 
-        $cardAsset = new CardAsset($assets[$cardRepository->getAssetNrByAssetName($this->attributes->set)]);
+            $cardAsset = new CardAsset($assets[$cardRepository->getAssetNrByAssetName($this->attributes->set)]);
 
-        $cardService = new CardService();
-        $cardService->getCard($this->attributes->cardNr, $cardAsset,
-            $assets[$cardRepository->getAssetNrByAssetName($this->attributes->set)][4]);
-        echo 'OK';
+            $cardService = new CardService();
+            $cardService->getCard($this->attributes->cardNr, $cardAsset,
+                $assets[$cardRepository->getAssetNrByAssetName($this->attributes->set)][4]);
+            echo 'OK';
+        }
     }
 
-    public function initAction() {
+    public function initAction(): void {
         $this->view->header();
         $this->view->navBar();
         $this->view->content($this->view->showHello());
         $this->view->footer();
     }
 
-    public function overviewAction() {
+    public function overviewAction(): void {
         $cardRepository = new CardRepository();
         $this->view->content($this->view->overviewLeftNavigation(
             $cardRepository->getCardTypes(),
@@ -64,19 +69,67 @@ class Controller
             $this->view->introCardSet()));
     }
 
-    public function showCardSetAction() {
-        $cardRepository = new CardRepository();
-        $this->view->content($this->view->overviewLeftNavigation(
-            $cardRepository->getCardTypes(),
-            $this->attributes->set,
-            $this->view->showCardSet($this->attributes->set, $cardRepository->getAsset($this->attributes->set))));
+    public function showCardSetAction(): void {
+        if (isset($this->attributes->set)) {
+            $cardRepository = new CardRepository();
+            $this->view->content($this->view->overviewLeftNavigation(
+                $cardRepository->getCardTypes(),
+                $this->attributes->set,
+                $this->view->showCardSet($this->attributes->set, $cardRepository->getAsset($this->attributes->set))));
+        }
     }
 
-    public function addAction() {
+    public function downloadSetAction(): void {
+        if (isset($this->attributes->set)) {
+            $cardRepository = new CardRepository();
+            $cardAsset = new CardAsset($cardRepository->getAsset($this->attributes->set));
+
+            if (is_file($cardAsset->getAltUrl())) {
+                echo "&nbsp;Set already downloaded";
+                die();
+            }
+
+            echo "&nbsp;Try to download set from:" . $cardAsset->getUrl();
+
+            if ($cardAsset->getExtension() === "png") {
+                file_put_contents("storage/tmp.png", file_get_contents($cardAsset->getUrl()));
+
+                if (extension_loaded('imagick')) {
+                    $imagick = new Imagick();
+                    try {
+                        $imagick->readImage('storage/tmp.png');
+                        $imagick->writeImages($cardAsset->getAltUrl(), false);
+                    } catch (ImagickException $e) {
+                        throw new RuntimeException('Error while Imagick-Conversion:'
+                            . $cardAsset->getAltUrl() . ', check if exists:' . file_exists($cardAsset->getAltUrl()
+                                . "; remote source:" . $cardAsset->getUrl() . ";"));
+                    }
+                    $result = 1;
+                } else {
+                    $img = imagecreatefrompng("storage/tmp.png");
+                    $result = imagejpeg($img, $cardAsset->getAltUrl());
+
+                    if (!$result) {
+                        throw new RuntimeException('Source not found, local source:'
+                            . $cardAsset->getAltUrl() . ', check if exists:' . file_exists($cardAsset->getAltUrl()
+                                . "; remote source:" . $cardAsset->getUrl() . ";"));
+                    }
+                }
+            } else {
+                file_put_contents($cardAsset->getAltUrl(), file_get_contents($cardAsset->getUrl()));
+                $result = 1;
+            }
+
+            echo ($result?"...download successful":"...download failed");
+            die();
+        }
+    }
+
+    public function addAction(): void {
         $this->view->content($this->view->showPlus());
     }
 
-    public function showHalloAction() {
+    public function showHalloAction(): void {
         $this->view->content($this->view->showHello());
     }
 }

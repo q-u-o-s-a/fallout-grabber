@@ -2,6 +2,8 @@
 
 namespace FalloutGrabber;
 
+use RuntimeException;
+
 class CardAsset
 {
     const path = "storage/";
@@ -24,6 +26,12 @@ class CardAsset
         $this->altUrl = self::path . $asset[6];
         $this->extension = $asset[5];
         $this->cardType = $asset[7];
+
+        if (!is_dir(self::path)) {
+            if (!mkdir(self::path, 0777, true) && !is_dir(self::path)) {
+                throw new RuntimeException(sprintf('Directory "%s" was not created', self::path));
+            }
+        }
     }
 
     /**
