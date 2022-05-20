@@ -114,7 +114,7 @@ class View
                                     <h5 class="card-title">Card Nr.'.($i+1).'</h5>
                                     <img src="/storage/imageCache/'.$set.'/'.$cardRow.'-'.$cardColumn.'.png" class="card-img-top" alt="...">
                                     <p class="card-text">'.print_r($cards['Names'][$i], true).'</p>
-                                    <button type="button" class="bi-plus-square-dotted btn btn-primary"> Add Card</button>
+                                    <a target="_blank" href="/storage/imageCache/'.$set.'/'.$cardRow.'-'.$cardColumn.'.png"> Add Card</a>
                                     <button type="button" hx-get="/?action=loadCard&set='.$set.'&cardNr='.$i.'" class="bi-disc btn btn-primary"> </button>
                                     </div>
                                 </div>

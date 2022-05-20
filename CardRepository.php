@@ -61,7 +61,10 @@ class CardRepository
             15 => [999, 648, "http://cloud-3.steamusercontent.com/ugc/1664605116696856175/C1839A0F43EAEB3D773DA818B4CE164583F3FB0A/", 14, 8, 'jpeg',
                 "Names" => [],
                 "C1839A0F43EAEB3D773DA818B4CE164583F3FB0A_fallout_ab_mutation.jpg", "fallout_ab_mutation"],
-            16 => [374, 246, "http://cloud-3.steamusercontent.com/ugc/1248008787331976660/5496D694B8472EBA285A1DFBBB39B7BC97C77FE9/", 6, 6, 'png',
+            16 => [1045, 671, "http://cloud-3.steamusercontent.com/ugc/1037464359655849151/1D79F1455334E46295FE7F4CD191EFA97ECD892E/", 61, 10, 'jpeg',
+                "Names" => [],
+                "1D79F1455334E46295FE7F4CD191EFA97ECD892E_card_quests2.jpg", "card_quests2"],
+            17 => [374, 246, "http://cloud-3.steamusercontent.com/ugc/1248008787331976660/5496D694B8472EBA285A1DFBBB39B7BC97C77FE9/", 6, 6, 'png',
                 "Names" => [],
                 "5496D694B8472EBA285A1DFBBB39B7BC97C77FE9_char_card_nc.png", "char_card_nc"]
         ];
