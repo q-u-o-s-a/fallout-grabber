@@ -130,13 +130,13 @@ class View
     public function showStoryCards($storyCards): string {
         $content = '    <div class="row">';
 
-        foreach ($storyCards as $storyCard){
+        foreach ($storyCards as $key => $storyCard){
             $cardRow = floor((int)reset($storyCard) / $storyCard[0]);
             $cardColumn = (int)reset($storyCard)  % $storyCard[0];
 
             $content .= $this->showCard(null,
                 '/storage/imageCache/' . key($storyCard) . '/' . $cardRow . '-' . $cardColumn . '.png',
-                key($storyCard),
+                key($storyCard).'-'.$key,
                 null,null,2);
         }
         $content .= '     </div>';
