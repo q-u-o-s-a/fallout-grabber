@@ -35,26 +35,35 @@ class View
                                                         style="color: orangered;"></i> Fallout Grabber</a>
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#" hx-target="#content" hx-get="/?action=add">Storycards</a>
+                            <a class="nav-link active" href="#" hx-target="#content" hx-get="/?action=myGame">My Game</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="#" hx-target="#content" hx-get="/?action=overview">Overview</a>
+                            <a class="nav-link" href="#" hx-target="#content" hx-get="/?action=overview">Overview</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" hx-target="#content" hx-get="/?action=storyCards">List StoryCards</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link disabled" href="#">Save Game</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" hx-target="#content" hx-get="/?action=settings">
+                            <i class="bi-gear-wide"></i></a>
                         </li>
                     </ul>
                 </div>
             </nav>';
     }
 
-    public function showPlus(): string {
-        return ' <i hx-get = "/?action=showCard" class="bi-plus-square-dotted" style = "font-size: 4rem; color: cornflowerblue;" ></i > ';
-    }
-
     public function showHello(): string {
         return '<div class="p-lg-5 d-flex align-items-center justify-content-center">
                     <i class="bi-emoji-smile" style = "font-size: 4rem; color: cornflowerblue;" >Hallo!</i >
+                </div>';
+    }
+
+    public function showSettings(): string {
+        return '<div class="p-lg-5 d-flex align-items-center justify-content-center">
+                    <button type="button" hx-get="/?action=removeAllSets" class="bi-cloud-download btn btn-primary"> Remove all CardSets</button></h5>
                 </div>';
     }
 
@@ -67,8 +76,8 @@ class View
     public function overviewLeftNavigation(array $navItems, string $active, $rightContent): string {
         $content = '<div class="row">
                     <div class="col-sm-2">
-                        <h3 class="mt-4">Cardtypes</h3>
-                        <p>Select Cardtype, Scenario and Set.</p>
+                        <h3 class="mt-4">CardTypes</h3>
+                        <p>Select CardType, Scenario and Set.</p>
                         <ul class="nav nav-pills flex-column">';
         foreach ($navItems as $navItem) {
             $content .= '     <li class="nav-item">
@@ -89,9 +98,9 @@ class View
 
     public function introCardSet(): string {
         return '    <div class="col-sm-10">
-                        <h2 class="mt-5">Cardset Overview</h2>
-                        <h5>Cardset overview over different Cardtypes.</h5>
-                        <p>Select Cardtype</p>
+                        <h2 class="mt-5">CardSet Overview</h2>
+                        <h5>CardSet overview over different CardTypes.</h5>
+                        <p>Select CardType</p>
                     </div>';
     }
 
@@ -99,31 +108,61 @@ class View
         $content = '<div class="col-sm-10">
                         <h2 class="mt-5">Cardset</h2>
                         <h5>' . $set . '
-                        <button type="button" hx-get="/?action=downloadSet&set='.$set.'" class="bi-cloud-download btn btn-primary"> </button></h5>
+                        <button type="button" hx-get="/?action=downloadSet&set=' . $set . '" class="bi-cloud-download btn btn-primary"> </button></h5>
                         <p>Overview over set</p>';
 
         $content .= '    <div class="row">';
 
         for ($i = 0; $i < $cards[3]; $i++) {
-
             $cardRow = floor($i / $cards[4]);
             $cardColumn = $i % $cards[4];
-
-            $content .= ('         <div class="col-sm-2 m-1">
-                                <div class="card">
-                                    <div class="card-body">
-                                    <h5 class="card-title">Card Nr.'.($i+1).'</h5>
-                                    <img src="/storage/imageCache/'.$set.'/'.$cardRow.'-'.$cardColumn.'.png" class="card-img-top" alt="...">
-                                    <p class="card-text">'.print_r($cards['Names'][$i], true).'</p>
-                                    <a target="_blank" href="/storage/imageCache/'.$set.'/'.$cardRow.'-'.$cardColumn.'.png"> Add Card</a>
-                                    <button type="button" hx-get="/?action=loadCard&set='.$set.'&cardNr='.$i.'" class="bi-disc btn btn-primary"> </button>
-                                    </div>
-                                </div>
-                            </div>');
+            $content .= $this->showCard($cards['Names'][$i],
+                '/storage/imageCache/' . $set . '/' . $cardRow . '-' . $cardColumn . '.png',
+                'Card Nr:' . ($i + 1),
+                $this->addButton($set, $cardRow, $cardColumn),
+                $this->loadButton($set, $i));
         }
         $content .= '     </div>
                     </div>';
         return $content;
+    }
+
+    public function showStoryCards($storyCards): string {
+        $content = '    <div class="row">';
+
+        foreach ($storyCards as $storyCard){
+            $cardRow = floor((int)reset($storyCard) / $storyCard[0]);
+            $cardColumn = (int)reset($storyCard)  % $storyCard[0];
+
+            $content .= $this->showCard(null,
+                '/storage/imageCache/' . key($storyCard) . '/' . $cardRow . '-' . $cardColumn . '.png',
+                key($storyCard),
+                null,null,2);
+        }
+        $content .= '     </div>';
+        return $content;
+    }
+
+    public function showCard($cardTitle, $imageUrl, $cardName, $addButton = null, $loadButton = null, $size = 3): string {
+        return ('         <div class="col-sm-'.$size.' m-1">
+                            <div class="card">
+                                <div class="card-body">
+                                <h5 class="card-title">' . $cardTitle . '</h5>
+                                <img src="' . $imageUrl . '" class="card-img-top" alt="...">
+                                <p class="card-text">' . $cardName . '</p>
+                                ' . $addButton . '
+                                ' . $loadButton . '
+                                </div>
+                            </div>
+                        </div>');
+    }
+
+    private function loadButton($set, $cardNr): string {
+        return '<button type="button" hx-get="/?action=loadCard&set=' . $set . '&cardNr=' . $cardNr . '" class="bi-disc btn btn-primary"> </button>';
+    }
+
+    private function addButton($set, $cardRow, $cardColumn): string {
+        return '<a target="_blank" href="/storage/imageCache/' . $set . '/' . $cardRow . '-' . $cardColumn . '.png"> Add Card</a>';
     }
 
 }

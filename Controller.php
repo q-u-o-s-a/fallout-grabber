@@ -14,7 +14,7 @@ class Controller
 
     /**
      * Controller constructor.
-     * @param \FalloutGrabber\View $view
+     * @param View $view
      */
     public function __construct(View $view) {
         $this->view = $view;
@@ -45,7 +45,10 @@ class Controller
             $cardRepository = new CardRepository();
             $assets = $cardRepository->getAssets();
 
-            $cardAsset = new CardAsset($assets[$cardRepository->getAssetNrByAssetName($this->attributes->set)]);
+            $cardAsset = new CardAsset(
+                $assets[$cardRepository->getAssetNrByAssetName($this->attributes->set)],
+                $cardRepository->getUrlPrefix()
+            );
 
             $cardService = new CardService();
             $cardService->getCard($this->attributes->cardNr, $cardAsset,
@@ -82,7 +85,9 @@ class Controller
     public function downloadSetAction(): void {
         if (isset($this->attributes->set)) {
             $cardRepository = new CardRepository();
-            $cardAsset = new CardAsset($cardRepository->getAsset($this->attributes->set));
+            $cardAsset = new CardAsset(
+                $cardRepository->getAsset($this->attributes->set),
+                $cardRepository->getUrlPrefix());
 
             if (is_file($cardAsset->getAltUrl())) {
                 echo "&nbsp;Set already downloaded";
@@ -120,16 +125,33 @@ class Controller
                 $result = 1;
             }
 
-            echo ($result?"...download successful":"...download failed");
+            echo($result ? "...download successful" : "...download failed");
             die();
         }
     }
 
-    public function addAction(): void {
-        $this->view->content($this->view->showPlus());
+    public function removeAllSetsAction(): void {
+        array_map('unlink', glob("storage/*.png"));
+        array_map('unlink', glob("storage/*.jpeg"));
+
+        echo " All CardSets removed";
+    }
+
+    public function myGameAction(): void {
+        $this->view->content($this->view->showCard("Test", "test", "test",
+            null, null, 1));
+    }
+
+    public function storyCardsAction(): void {
+        $cardRepository = new CardRepository();
+        $this->view->content($this->view->showStoryCards($cardRepository->getStoryCardArray()));
     }
 
     public function showHalloAction(): void {
         $this->view->content($this->view->showHello());
+    }
+
+    public function settingsAction(): void {
+        $this->view->content($this->view->showSettings());
     }
 }

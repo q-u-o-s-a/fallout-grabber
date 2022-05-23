@@ -27,7 +27,12 @@ class CardService
                         . $this->urlExists($cardAsset->getUrl()) . ";"));
             }
         }
-        $im = imagecreatefromjpeg($cardAsset->getAltUrl());
+
+        try {
+            $im = imagecreatefromstring(file_get_contents($cardAsset->getAltUrl()));
+        } catch (RuntimeException $ex) {
+            throw new RuntimeException('Could not load Image;');
+        }
 
         $result = imagecrop($im, [
             'x' => $startXPosition,
@@ -72,7 +77,7 @@ class CardService
         }
     }
 
-    public function getCard(int $cardNr, $cardAsset, $cardsPerRow): void {
+    public function getCard( int $cardNr, $cardAsset, $cardsPerRow): void {
         $cardRow = floor($cardNr / $cardsPerRow);
         $cardColumn = $cardNr % $cardsPerRow;
 
