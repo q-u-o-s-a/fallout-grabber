@@ -53,7 +53,9 @@ class Controller
             $cardService = new CardService();
             $cardService->getCard($this->attributes->cardNr, $cardAsset,
                 $assets[$cardRepository->getAssetNrByAssetName($this->attributes->set)][4]);
-            echo 'OK';
+
+            $this->view->content($this->view->showDetailCard($this->attributes->cardNr, $this->attributes->set,
+                $assets[$cardRepository->getAssetNrByAssetName($this->attributes->set)][4]));
         }
     }
 
@@ -67,7 +69,7 @@ class Controller
     public function overviewAction(): void {
         $cardRepository = new CardRepository();
         $this->view->content($this->view->overviewLeftNavigation(
-            $cardRepository->getCardTypes(),
+            $cardRepository->getAssetCardTypes(),
             "",
             $this->view->introCardSet()));
     }
@@ -76,7 +78,7 @@ class Controller
         if (isset($this->attributes->set)) {
             $cardRepository = new CardRepository();
             $this->view->content($this->view->overviewLeftNavigation(
-                $cardRepository->getCardTypes(),
+                $cardRepository->getAssetCardTypes(),
                 $this->attributes->set,
                 $this->view->showCardSet($this->attributes->set, $cardRepository->getAsset($this->attributes->set))));
         }
@@ -130,11 +132,20 @@ class Controller
         }
     }
 
-    public function removeAllSetsAction(): void {
+    public function removeAllSetSourcesAction(): void {
         array_map('unlink', glob("storage/*.png"));
         array_map('unlink', glob("storage/*.jpeg"));
+        array_map('unlink', glob("storage/*.jpg"));
 
         echo " All CardSets removed";
+    }
+
+    public function removeAllLocalCardImagesAction(): void {
+        $cardRepository = new CardRepository();
+        $cardService = new CardService();
+        $cardService->removeCards($cardRepository->getAssets());
+
+        echo " All Card Images removed";
     }
 
     public function myGameAction(): void {
@@ -144,7 +155,7 @@ class Controller
 
     public function storyCardsAction(): void {
         $cardRepository = new CardRepository();
-        $this->view->content($this->view->showStoryCards($cardRepository->getStoryCardArray()));
+        $this->view->content($this->view->showCards($cardRepository->getStoryCardArray()));
     }
 
     public function showHalloAction(): void {

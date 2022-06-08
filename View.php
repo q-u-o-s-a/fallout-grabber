@@ -62,8 +62,11 @@ class View
     }
 
     public function showSettings(): string {
-        return '<div class="p-lg-5 d-flex align-items-center justify-content-center">
-                    <button type="button" hx-get="/?action=removeAllSets" class="bi-cloud-download btn btn-primary"> Remove all CardSets</button></h5>
+        return '<div class="p-lg-5 d-flex align-items-center justify-content-center gap-1">
+                    <button type="button" hx-get="/?action=removeAllSetSources" class="bi-trash btn btn-primary"> Remove all local CardSet Sources</button></h5>
+                    <button type="button" hx-get="/?action=removeAllLocalCardImages" class="bi-trash btn btn-primary"> Remove all local Card Images</button></h5>
+                    <button type="button" hx-get="/?action=downloadAllSetSources" class="bi-download btn btn-primary"> Download all local CardSet Sources</button></h5>
+                    <button type="button" hx-get="/?action=downloadAllLocalCardImages" class="bi-download btn btn-primary"> Download all local Card Images</button></h5>
                 </div>';
     }
 
@@ -114,33 +117,32 @@ class View
         $content .= '    <div class="row">';
 
         for ($i = 0; $i < $cards[3]; $i++) {
-            $cardRow = floor($i / $cards[4]);
-            $cardColumn = $i % $cards[4];
-            $content .= $this->showCard($cards['Names'][$i],
-                '/storage/imageCache/' . $set . '/' . $cardRow . '-' . $cardColumn . '.png',
-                'Card Nr:' . ($i + 1),
-                $this->addButton($set, $cardRow, $cardColumn),
-                $this->loadButton($set, $i));
+            $content .= $this->showDetailCard($i, $set, $cards[4],$cards['Names'][$i]);
         }
         $content .= '     </div>
                     </div>';
         return $content;
     }
 
-    public function showStoryCards($storyCards): string {
+    public function showCards($cards): string {
         $content = '    <div class="row">';
 
-        foreach ($storyCards as $key => $storyCard){
-            $cardRow = floor((int)reset($storyCard) / $storyCard[0]);
-            $cardColumn = (int)reset($storyCard)  % $storyCard[0];
-
-            $content .= $this->showCard(null,
-                '/storage/imageCache/' . key($storyCard) . '/' . $cardRow . '-' . $cardColumn . '.png',
-                key($storyCard).'-'.$key,
-                null,null,2);
+        foreach ($cards as $card){
+            $content .=$this->showDetailCard((int)reset($card), key($card),$card[0]);
         }
         $content .= '     </div>';
         return $content;
+    }
+
+    public function showDetailCard(int $cardNr, string $set, $row, $title = null): string {
+        $cardRow = floor($cardNr / $row);
+        $cardColumn = $cardNr  % $row;
+
+        return $this->showCard($title,
+            '/storage/imageCache/' . $set . '/' . $cardRow . '-' . $cardColumn . '.png',
+            $set.'-'.$cardNr,
+            $this->addButton($set, $cardRow, $cardColumn),
+            $this->loadButton($set, $cardNr));
     }
 
     public function showCard($cardTitle, $imageUrl, $cardName, $addButton = null, $loadButton = null, $size = 3): string {
@@ -158,7 +160,7 @@ class View
     }
 
     private function loadButton($set, $cardNr): string {
-        return '<button type="button" hx-get="/?action=loadCard&set=' . $set . '&cardNr=' . $cardNr . '" class="bi-disc btn btn-primary"> </button>';
+        return '<button type="button" hx-target="closest div" hx-get="/?action=loadCard&set=' . $set . '&cardNr=' . $cardNr . '" class="bi-disc btn btn-primary"> </button>';
     }
 
     private function addButton($set, $cardRow, $cardColumn): string {

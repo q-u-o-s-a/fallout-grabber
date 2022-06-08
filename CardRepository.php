@@ -75,9 +75,19 @@ class CardRepository
                 '97ADBD5549E4B5B9E32F94E22A47F3E031A6D7FF_token_faction1_marker.png'],
             12 => ['1664605116696859250/5216053FFE2997E1C7ABBD3B00F849EE28B616AB/',
                 '5216053FFE2997E1C7ABBD3B00F849EE28B616AB_fallout_ab_CAMPtoken.png'],
+            13 => ['1037464359655913408/01F2652A7AD09CDAE2B387B96AA1A50731B6F015/',
+                '01F2652A7AD09CDAE2B387B96AA1A50731B6F015_token_quest_blue.png'],
+            14 => ['1037464359655916382/E9D0F876F0C05642354E0A8D5DD5338527FC8B48/',
+                'E9D0F876F0C05642354E0A8D5DD5338527FC8B48_token_quest_yellow.png'],
+            15 => ['1248008787334771510/1904802B6E7F7DFF7DF5AFA5D11E223DB918FBE5/',
+                '1904802B6E7F7DFF7DF5AFA5D11E223DB918FBE5_green-quest.png'],
+            16 => ['1248008787334773159/410DAB2EF7D2C47A954BAC78FE9179315F096BA0/',
+                '410DAB2EF7D2C47A954BAC78FE9179315F096BA0_purple-quest.png'],
+            17 => ['1248008787334774020/606B30D15691733EE4D92EEA221AF1A68E65ADE7/',
+                '606B30D15691733EE4D92EEA221AF1A68E65ADE7_red-quest.png'],
         ];
 
-        //HALT AN 35521
+        //HALT AN 39381
 
         $this->playerTokens = [
             'Ghoul Token' => [
@@ -210,6 +220,30 @@ class CardRepository
                 'B62958262ACCDFE1E73C5CB4B22E8231ACC48863_scenario_commonwealth_map.jpg'],
             17 => ['1037464359655361040/D710303D5E5725295D6E3709FAE12CEA220CF0EE/',
                 'D710303D5E5725295D6E3709FAE12CEA220CF0EE_scenario_commonwealth_back.jpg'],
+            18 => ['1664605116696617954/96215437647E8E3AFDF40C4FEB550752464C4DF3/',
+                '96215437647E8E3AFDF40C4FEB550752464C4DF3_fallout_nc_comm.jpg'],
+            19 => ['1664605116696618182/EC7C5445857FEB305D5A45332B2284133FFFC988/',
+                'EC7C5445857FEB305D5A45332B2284133FFFC988_fallout_nc_comm_back.jpg'],
+            20 => ['1664605116696628424/F3F04DD406B9CA862441A245709BC89E44C63968/',
+                'F3F04DD406B9CA862441A245709BC89E44C63968_fallout_nc_nc.jpg'],
+            21 => ['1664605116696628760/409BE97F60CF3AFAF5155E8AC7417ADF3F2D545E/',
+                '409BE97F60CF3AFAF5155E8AC7417ADF3F2D545E_fallout_nc_nc_back.jpg'],
+            22 => ['1664605116696626631/7E44284B4A9C058F7B30389B018A295027C90BC4/',
+                '7E44284B4A9C058F7B30389B018A295027C90BC4_fallout_nc_master.jpg'],
+            23 => ['1664605116696626854/1D481F1B7135D2D7CF970BD1C55E9C37E61F2795/',
+                '1D481F1B7135D2D7CF970BD1C55E9C37E61F2795_fallout_nc_master_back.jpg'],
+            24 => ['1664605116696625048/4F9330C6E03E4E854049DD2917200659C5E885C7/',
+                '4F9330C6E03E4E854049DD2917200659C5E885C7_fallout_nc_harbor.jpg'],
+            25 => ['1664605116696625248/FD2F6F60DA8118DDBFA33349AD1960AF4C5ACC18/',
+                'FD2F6F60DA8118DDBFA33349AD1960AF4C5ACC18_fallout_nc_harbor_back.jpg'],
+            26 => ['1664605116696622700/91A57F03DA5CF4D0016CC63D38FBADC3015615C8/',
+                '91A57F03DA5CF4D0016CC63D38FBADC3015615C8_fallout_nc_cp.jpg'],
+            27 => ['1664605116696622909/05C458A737B143ECD7E67BA6022BE9868AD46F4F/',
+                '05C458A737B143ECD7E67BA6022BE9868AD46F4F_fallout_nc_cp_back.jpg'],
+            28 => ['1664605116696630806/1E023D1DE161306263BDC6510F058B83E46DA3DF/',
+                '1E023D1DE161306263BDC6510F058B83E46DA3DF_fallout_nc_pitt.jpg'],
+            29 => ['1664605116696631006/9AD425453463AF322E700D61D53554D5A833C940/',
+                '9AD425453463AF322E700D61D53554D5A833C940_fallout_nc_pitt_back.jpg'],
         ];
 
         $this->missionLinks = [
@@ -329,12 +363,12 @@ class CardRepository
             7 => [1045, 669, "1037464359655825845/1B862C377774AECB3675E79D8A752F4DCF6E4206/", 8, 10, 'png',
                 "Names" => ['086','087','088','089','090','091','092','093'],
                 "1B862C377774AECB3675E79D8A752F4DCF6E4206_card_vault109.png", "card_vault109"],
-            8 => [748, 489, "1037464359655810160/E3FBDBE5FD93C0FDFA6BDD0583591C4F3102D1E3/", 25, 10, 'png',
-                "Names" => [],
-                "E3FBDBE5FD93C0FDFA6BDD0583591C4F3102D1E3_card_asset.jpg", "card_asset"],
-            9 => [378, 250, "1248008787334631981/749F9210413DE5B646A972002E7A51BBFC5D715E/", 26, 10, 'jpeg',
-                "Names" => [],
-                "749F9210413DE5B646A972002E7A51BBFC5D715E_nc_loot.jpg", "nc_loot"],
+            8 => [1045, 669, "1248008787334589110/8F98EA20710F87C8696A14CBBC52A2294E205E48/", 14, 10, 'jpeg',
+                "Names" => ['161','163','164','165','228','229','241A','241B','243A','243B','244A','244B','244C'],
+                "8F98EA20710F87C8696A14CBBC52A2294E205E48_nc_settlement.jpg", "nc_settlement"],
+            9 => [1045, 669, "1248008787334707674/E1A609B557AB0A3A7D43FD3B4E4BB9018362C4B9/", 17, 10, 'jpeg',
+                "Names" => ['162','168','171','191','215','216','222','224','227','231','235','239','240A', '240B','240C','240D', '242'],
+                "E1A609B557AB0A3A7D43FD3B4E4BB9018362C4B9_nc_wasteland.jpg", "nc_wasteland"],
             10 => [376, 246, "1248008787334640640/6036DA0F25052E1DC6A66EF4A8D6101CF92AF7B5/", 8, 8, 'jpeg',
                 "Names" => [],
                 "6036DA0F25052E1DC6A66EF4A8D6101CF92AF7B5_nc_unique_assets.jpg", "nc_unique_assets"],
@@ -394,14 +428,20 @@ class CardRepository
                     'Mentats', 'Metal Armor', 'Piper', 'Pipe Rifle', 'Preston Garvey', 'Psycho', 'Raider Armor',
                     'Tesla Science', 'Fistful of caps', 'Fistful of caps', 'Fistful of caps', 'Fistful of caps',
                     'Junk', 'Junk', 'Junk', 'Junk', 'Water', 'Water'],
-                "9A24C6A5386A7DDFFFBDF6F390281734A45AFE44_card_loot.jpg", "card_loot"]
+                "9A24C6A5386A7DDFFFBDF6F390281734A45AFE44_card_loot.jpg", "card_loot"],
+            28 => [748, 489, "1037464359655810160/E3FBDBE5FD93C0FDFA6BDD0583591C4F3102D1E3/", 25, 10, 'png',
+                "Names" => [],
+                "E3FBDBE5FD93C0FDFA6BDD0583591C4F3102D1E3_card_asset.jpg", "card_asset"],
+            29 => [378, 250, "1248008787334631981/749F9210413DE5B646A972002E7A51BBFC5D715E/", 26, 10, 'jpeg',
+                "Names" => [],
+                "749F9210413DE5B646A972002E7A51BBFC5D715E_nc_loot.jpg", "nc_loot"],
         ];
 
     }
 
     public function getStoryCardArray(): array {
         $storyCard = [];
-        for ($i = 0; $i <=7; $i++){
+        for ($i = 0; $i <=9; $i++){
             foreach ($this->assets[$i]['Names'] as $key => $name) {
                 $storyCard[$name] = [$this->assets[$i][7] => $key, $this->assets[$i][4]];
             }
@@ -420,7 +460,7 @@ class CardRepository
     /**
      * @return array|false
      */
-    public function getCardTypes() {
+    public function getAssetCardTypes() {
         foreach ($this->assets as $asset) {
             $result[] = $asset[7];
         }

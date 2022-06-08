@@ -88,4 +88,10 @@ class CardService
             $this->getCrop($cardColumn, $cardRow, $cardAsset);
         }
     }
+
+    public function removeCards(array $assets) {
+        foreach ($assets as $asset){
+            array_map('unlink', glob(self::path. $asset[7]."/*.png"));
+        }
+    }
 }
