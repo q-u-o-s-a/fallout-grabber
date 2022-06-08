@@ -7,39 +7,8 @@ use Imagick;
 use ImagickException;
 use RuntimeException;
 
-class Controller
+class Controller extends AbstractController
 {
-    private View $view;
-    private object $attributes;
-
-    /**
-     * Controller constructor.
-     * @param View $view
-     */
-    public function __construct(View $view) {
-        $this->view = $view;
-        $this->attributes = $this->getAttributes();
-        $action = $this->attributes->action . "Action";
-        if ($action === 'Action') {
-            $action = 'initAction';
-        }
-        $this->$action();
-    }
-
-    public function getAttributes(): object {
-        $request = $_GET;
-        if (isset($_POST['set'])) {
-            $cardNr = (int)($_POST['cardNr'] ?? null);
-            $action = (string)($POST['action'] ?? "");
-            $set = (string)($POST['set'] ?? "");
-        } else {
-            $cardNr = (int)($request['cardNr'] ?? null);
-            $action = (string)($request['action'] ?? "");
-            $set = (string)($request['set'] ?? "");
-        }
-        return (object)['cardNr' => $cardNr, 'action' => $action, 'set' => $set];
-    }
-
     public function loadCardAction(): void {
         if (isset($this->attributes->set)) {
             $cardRepository = new CardRepository();
@@ -57,13 +26,6 @@ class Controller
             $this->view->content($this->view->showDetailCard($this->attributes->cardNr, $this->attributes->set,
                 $assets[$cardRepository->getAssetNrByAssetName($this->attributes->set)][4]));
         }
-    }
-
-    public function initAction(): void {
-        $this->view->header();
-        $this->view->navBar();
-        $this->view->content($this->view->showHello());
-        $this->view->footer();
     }
 
     public function overviewAction(): void {
@@ -156,13 +118,5 @@ class Controller
     public function storyCardsAction(): void {
         $cardRepository = new CardRepository();
         $this->view->content($this->view->showCards($cardRepository->getStoryCardArray()));
-    }
-
-    public function showHalloAction(): void {
-        $this->view->content($this->view->showHello());
-    }
-
-    public function settingsAction(): void {
-        $this->view->content($this->view->showSettings());
     }
 }

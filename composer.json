@@ -12,6 +12,7 @@
   "require": {
     "php": "^7.4.0",
     "ext-gd": "*",
-    "ext-imagick": "*"
+    "ext-imagick": "*",
+    "typo3fluid/fluid": "^2.7"
   }
 }

@@ -11,11 +11,11 @@ class View
                 <title>Fallout Grabber</title>
                 <meta charset="utf-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
-                <link href="/css/bootstrap-icons-1.8.1/bootstrap-icons.css" rel="stylesheet">
-                <link href="/css/bootstrap.min.css" rel="stylesheet">
-                <link href="/css/main.css" rel="stylesheet">
-                <script src="/js/bootstrap.bundle.min.js"></script>
-                <script src="/js/htmx.js" defer ></script >
+                <link href="/Resources/Public/Css/bootstrap-icons-1.8.1/bootstrap-icons.css" rel="stylesheet">
+                <link href="/Resources/Public/Css/bootstrap.min.css" rel="stylesheet">
+                <link href="/Resources/Public/Css/main.css" rel="stylesheet">
+                <script src="/Resources/Public/Js/bootstrap.bundle.min.js"></script>
+                <script src="/Resources/Public/Js/htmx.js" defer ></script >
             </head>
             <body>';
     }

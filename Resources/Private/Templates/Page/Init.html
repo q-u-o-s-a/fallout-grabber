@@ -1,0 +1,26 @@
+<f:layout name="Default" />
+
+<f:section name="HeadScripts">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/Resources/Public/Css/bootstrap-icons-1.8.1/bootstrap-icons.css" rel="stylesheet">
+    <link href="/Resources/Public/Css/bootstrap.min.css" rel="stylesheet">
+    <link href="/Resources/Public/Css/main.css" rel="stylesheet">
+    <script src="/Resources/Public/Js/bootstrap.bundle.min.js"></script>
+    <script src="/Resources/Public/Js/htmx.js" defer ></script >
+</f:section>
+
+<f:section name="Header">
+</f:section>
+
+<f:section name="Body">
+    <f:render partial="NavBar"/>
+    <div id="content" class="container-fluid">
+        <f:render partial="Hello"/>
+    </div>
+</f:section>
+
+<f:section name="Footer">
+    <div class="mt-5 p-4 bg-dark text-white text-center">
+        <p>Developed by J.W., Files from Steam - Fallout - The BoardGame Tabletop Simulator</p>
+    </div>
+</f:section>
