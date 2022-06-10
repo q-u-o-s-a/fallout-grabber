@@ -1,20 +1,25 @@
-<div class="row">
-  <div class="col-sm-2">
+<div class="col-sm-2">
     <h3 class="mt-4">CardTypes</h3>
     <p>Select CardType, Scenario and Set.</p>
     <ul class="nav nav-pills flex-column">
 
-      foreach ($navItems as $navItem) {
-      $content .= '     <li class="nav-item">
-        <a hx-get="/?action=showCardSet&set=' . $navItem . '" hx-target="#content" class="nav-link ' . (($navItem == $active) ? "active" : "") . '" href="#">' . $navItem . '</a>
-      </li>';
-      }
-
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li>
+        <f:for each="{navItems}" key="key" as="navItem">
+            <f:if condition=" {navItem}== {active}">
+                <f:then>
+                    <li class="nav-item">
+                        <a hx-get="/?action=overviewSet&set={navItem}" hx-target="#content"
+                           class="nav-link active " href="#">{navItem}</a>
+                </f:then>
+                <f:else>
+                    <li class="nav-item">
+                        <a hx-get="/?action=overviewSet&set={navItem}" hx-target="#content"
+                           class="nav-link " href="#">{navItem}</a>
+                </f:else>
+            </f:if>
+        </f:for>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
     </ul>
     <hr class="d-sm-none">
-  </div>
-  ' . $rightContent . '
 </div>

@@ -30,10 +30,15 @@ class Controller extends AbstractController
 
     public function overviewAction(): void {
         $cardRepository = new CardRepository();
-        $this->view->content($this->view->overviewLeftNavigation(
-            $cardRepository->getAssetCardTypes(),
-            "",
-            $this->view->introCardSet()));
+        $this->view->assign('navItems', $cardRepository->getAssetCardTypes());
+        $this->view->assign('set', "Overview");
+    }
+
+    public function overviewSetAction(): void {
+        $cardRepository = new CardRepository();
+        $this->view->assign('navItems', $cardRepository->getAssetCardTypes());
+        $this->view->assign('set', $this->attributes->set);
+        $this->view->assign('size', 2);
     }
 
     public function showCardSetAction(): void {
