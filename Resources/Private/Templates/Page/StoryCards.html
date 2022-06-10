@@ -1,0 +1,7 @@
+<div class="row">
+    <f:for each="{cards}" key="name" as="card">
+        <f:render partial="Card" arguments="{name: name, size:size, set:set, card: card}" />
+    </f:for>
+</div>
+
+

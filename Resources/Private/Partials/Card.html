@@ -1,0 +1,12 @@
+<div class="col-sm-{size} m-1">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{name}</h5>
+            <img src="{card.imageUrl}" class="card-img-top" alt="...">
+            <p class="card-text">{card.cardName}</p>
+            <button type="button" hx-target="closest div" hx-get="/?action=loadCard&set={set}&cardNr={card[0]}"
+                    class="bi-disc btn btn-primary"></button>
+            <a target="_blank" href="/storage/imageCache/{set}/'{cardRow}-{cardColumn}.png"> Add Card</a>
+        </div>
+    </div>
+</div>

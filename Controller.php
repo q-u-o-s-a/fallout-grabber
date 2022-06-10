@@ -111,12 +111,14 @@ class Controller extends AbstractController
     }
 
     public function myGameAction(): void {
-        $this->view->content($this->view->showCard("Test", "test", "test",
-            null, null, 1));
+        $this->view->assign('set', "TEST");
+        $this->view->assign('set', "TEST");
     }
 
     public function storyCardsAction(): void {
         $cardRepository = new CardRepository();
-        $this->view->content($this->view->showCards($cardRepository->getStoryCardArray()));
+        $this->view->assign('size', "2");
+        $this->view->assign('set', "StoryCard");
+        $this->view->assign('cards', $cardRepository->getStoryCardArray());
     }
 }

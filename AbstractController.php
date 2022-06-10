@@ -9,16 +9,22 @@ class AbstractController
     protected TemplateView $view;
     protected object $attributes;
 
-    public function __construct($view) {
-        $paths = $view->getTemplatePaths();
-        $paths->fillDefaultsByPackageName('');
+    /**
+     * AbstractController constructor.
+     * @param TemplateView $view
+     */
+    public function __construct(TemplateView $view) {
+        $this->view = $view;
 
-        //$this->view = $view;
         $this->attributes = $this->getAttributes();
         $action = $this->attributes->action . "Action";
         if (method_exists($this, $action)) $this->$action();
-        $view->getRenderingContext()->setControllerName(ucfirst($this->attributes->controller));
-        echo $view->render($this->attributes->action);
+
+        $paths = $this->view->getTemplatePaths();
+        $paths->fillDefaultsByPackageName('');
+        $this->view->getRenderingContext()->setControllerName(ucfirst($this->attributes->controller));
+
+        echo $this->view->render($this->attributes->action);
     }
 
     public function getAttributes(): object {
