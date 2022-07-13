@@ -1,10 +1,10 @@
 <?php
-require "CardAsset.php";
-require "CardService.php";
-require "CardRepository.php";
+require "app/Domain/CardAsset.php";
+require "app/Services/CardService.php";
+require "app/Domain/CardRepository.php";
 require "View.php";
-require "AbstractController.php";
-require "Controller.php";
+require "app/Http/Controllers/AbstractController.php";
+require "app/Http/Controllers/Controller.php";
 
 require "vendor/autoload.php";
 
