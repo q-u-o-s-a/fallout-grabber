@@ -441,13 +441,36 @@ class CardRepository
 
     public function getStoryCardArray(): array {
         $storyCard = [];
-        for ($i = 0; $i <=9; $i++){
+        for ($i = 0; $i <= 9; $i++) {
             foreach ($this->assets[$i]['Names'] as $key => $name) {
-                $storyCard[$name] = [$this->assets[$i][7] => $key, $this->assets[$i][4]];
+                $cardsPerRow = $this->assets[$i][4];
+                $storyCard[$name] = [
+                    "name" => $name,
+                    "set" => $this->assets[$i][7],
+                    "cardNr" => $key,
+                    "cardRow" => (int) floor($key / $cardsPerRow),
+                    "cardColumn" => $key % $cardsPerRow
+                ];
             }
         }
         ksort($storyCard);
         return $storyCard;
+    }
+
+    public function getCardBySetNr(int $setNr, int $cardNr): array {
+        foreach ($this->assets[$setNr]['Names'] as $key => $name) {
+            if ($key === $cardNr) {
+                $cardsPerRow = $this->assets[$setNr][4];
+                return [
+                    "name" => $name,
+                    "set" => $this->assets[$setNr][7],
+                    "cardNr" => $key,
+                    "cardRow" => (int) floor($key / $cardsPerRow),
+                    "cardColumn" => $key % $cardsPerRow
+                ];
+            }
+        }
+        return [];
     }
 
     /**
@@ -466,9 +489,9 @@ class CardRepository
         }
         if (isset($result)) {
             return $result;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -483,10 +506,10 @@ class CardRepository
         return false;
     }
 
-    public function getAssetNrByAssetName($set) {
+    public function getAssetNrByAssetName($set) : int{
         foreach ($this->assets as $key => $asset) {
             if ((string)$asset[7] == (string)$set) {
-                return $key;
+                return (int) $key;
             }
         }
         return false;

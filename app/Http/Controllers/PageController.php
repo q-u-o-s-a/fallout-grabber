@@ -7,24 +7,30 @@ use Imagick;
 use ImagickException;
 use RuntimeException;
 
-class Controller extends AbstractController
+class PageController extends AbstractController
 {
-    public function loadCardAction(): void {
+    public function loadCardAction($attributes): void {
         if (isset($this->attributes->set)) {
+            $set = $this->attributes->set;
+
             $cardRepository = new CardRepository();
             $assets = $cardRepository->getAssets();
+            $setNr = $cardRepository->getAssetNrByAssetName($set);
 
             $cardAsset = new CardAsset(
-                $assets[$cardRepository->getAssetNrByAssetName($this->attributes->set)],
+                $assets[$setNr],
                 $cardRepository->getUrlPrefix()
             );
 
             $cardService = new CardService();
             $cardService->getCard($this->attributes->cardNr, $cardAsset,
-                $assets[$cardRepository->getAssetNrByAssetName($this->attributes->set)][4]);
+                $assets[$setNr][4]);
 
-            $this->view->content($this->view->showDetailCard($this->attributes->cardNr, $this->attributes->set,
-                $assets[$cardRepository->getAssetNrByAssetName($this->attributes->set)][4]));
+            $storyCard = $cardRepository->getCardBySetNr($setNr, $this->attributes->cardNr);
+
+            $this->view->assign('name', "X");
+            $this->view->assign('size', "2");
+            $this->view->assign('card', $storyCard);
         }
     }
 
@@ -123,7 +129,7 @@ class Controller extends AbstractController
     public function storyCardsAction(): void {
         $cardRepository = new CardRepository();
         $this->view->assign('size', "2");
-        $this->view->assign('set', "StoryCard");
+        $this->view->assign('name', "StoryCard");
         $this->view->assign('cards', $cardRepository->getStoryCardArray());
     }
 }

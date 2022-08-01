@@ -4,43 +4,32 @@ namespace FalloutGrabber;
 
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class AbstractController
+abstract class AbstractController
 {
+    public const ActionMethodIdent = 'Action';
+
     protected TemplateView $view;
     protected object $attributes;
 
-    /**
-     * AbstractController constructor.
-     * @param TemplateView $view
-     */
-    public function __construct(TemplateView $view) {
+    public function __construct(TemplateView $view, $attributes) {
+        $class = substr(explode('\\', get_class($this))[1], 0, -10);
         $this->view = $view;
-
-        $this->attributes = $this->getAttributes();
-        $action = $this->attributes->action . "Action";
-        if (method_exists($this, $action)) $this->$action();
-
-        $paths = $this->view->getTemplatePaths();
-        $paths->fillDefaultsByPackageName('');
-        $this->view->getRenderingContext()->setControllerName(ucfirst($this->attributes->controller));
-
-        echo $this->view->render($this->attributes->action);
+        $this->attributes = $attributes;
+        $this->view->getRenderingContext()->setControllerName(ucfirst($class));
     }
 
-    public function getAttributes(): object {
-        $request = $_GET;
-        if (isset($_POST['set'])) {
-            $cardNr = (int)($_POST['cardNr'] ?? null);
-            $controller = (string)($POST['controller'] ?? "page");
-            $action = (string)($POST['action'] ?? "init");
-            $set = (string)($POST['set'] ?? "");
-        } else {
-            $cardNr = (int)($request['cardNr'] ?? null);
-            $controller = (string)($request['controller'] ?? "page");
-            $action = (string)($request['action'] ?? "init");
-            $set = (string)($request['set'] ?? "");
+    public function init($controller, $action) {
+        $actionMethod = $action . $this::ActionMethodIdent;
+        if (method_exists($this, $actionMethod)) {
+            $this->$actionMethod($this->attributes);
         }
-        return (object)['cardNr' => $cardNr, 'action' => $action, 'set' => $set, 'controller' => $controller];
+
+        if ($this->view->getTemplatePaths()->resolveTemplateFileForControllerAndActionAndFormat(ucfirst($controller),
+            ucfirst($action))) {
+
+            return $this->view->render($action);
+        }
+        return $this->view->render();
     }
 
 }
